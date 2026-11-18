@@ -1,0 +1,24 @@
+#!/bin/bash
+# SPDX-FileCopyrightText: 2026 Ginta Uchiyama
+# SPDX-License-Identifier: BSD-3-Clause
+
+# --- 1. 標準出力：未プッシュのコミット一覧を表示 ---
+echo "=== 未プッシュのコミット一覧 ==="
+if git rev-parse --abbrev-ref --symbolic-full-name @{u} >/dev/null 2>&1; then
+    git log --oneline @{u}..HEAD
+    
+    # --- 2. 標準入力：ユーザーからの入力を受け取る ---
+    echo -n "詳細な差分（diff）も表示しますか？ (y/n): "
+    read user_input # キーボード入力を受け取る（標準入力）
+
+    # --- 3. 入力に応じた標準出力の切り替え ---
+    if [ "$user_input" = "y" ] || [ "$user_input" = "Y" ]; then
+        echo -e "\n=== 差分（テキストの中身）を表示します ==="
+        git diff @{u}..HEAD
+    else
+        echo "確認を終了します。"
+    fi
+else
+    echo "このブランチに対応するリモートブランチが設定されていません。"
+fi
+
