@@ -1,24 +1,74 @@
-#!/bin/bash
+#!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 Ginta Uchiyama
 # SPDX-License-Identifier: BSD-3-Clause
 
-# --- 1. 標準出力：未プッシュのコミット一覧を表示 ---
-echo "=== 未プッシュのコミット一覧 ==="
-if git rev-parse --abbrev-ref --symbolic-full-name @{u} >/dev/null 2>&1; then
-    git log --oneline @{u}..HEAD
-    
-    # --- 2. 標準入力：ユーザーからの入力を受け取る ---
-    echo -n "詳細な差分（diff）も表示しますか？ (y/n): "
-    read user_input # キーボード入力を受け取る（標準入力）
+import subprocess
+import sys
+import os
 
-    # --- 3. 入力に応じた標準出力の切り替え ---
-    if [ "$user_input" = "y" ] || [ "$user_input" = "Y" ]; then
-        echo -e "\n=== 差分（テキストの中身）を表示します ==="
-        git diff @{u}..HEAD
-    else
-        echo "確認を終了します。"
-    fi
-else
-    echo "このブランチに対応するリモートブランチが設定されていません。"
-fi
+def run_git_command(args):
+    """Gitコマンドを実行して標準出力文字を返す関数"""
+    try:
+        result = subprocess.run(
+            ['git'] + args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True
+        )
+        return result.stdout.strip()
+    except subprocess.CalledProcessError:
+        return None
+
+def check_file_status(filename):
+    # ファイルの存在またはGit管理状態の確認
+    if not os.path.exists(filename) and not run_git_command(['ls-files', filename]):
+        print(f"❌ エラー: ファイル '{filename}' が存在しないか、Gitで管理されていません。")
+        return
+
+    # 1. 未コミットの変更（変更あり、または未追跡）があるかチェック
+    status_output = run_git_command(['status', '--porcelain', filename])
+    if status_output:
+        print(f"⚠️ '{filename}' はローカルに変更または未追跡の変更があります（まだコミットされていません）。")
+        return
+
+    # 2. 現在のGitブランチ名を取得
+    branch = run_git_command(['rev-parse', '--abbrev-ref', 'HEAD'])
+    if not branch:
+        print("❌ エラー: 現在のGitブランチを取得できません（リポジトリ内ではない可能性があります）。")
+        return
+
+    # 3. リモートリポジトリ（originなど）の設定確認
+    remotes = run_git_command(['remote'])
+    if not remotes:
+        print("❌ エラー: リモートリポジトリが設定されていません。")
+        return
+
+    # 4. リモート側に該当ブランチが存在するか確認
+    remote_branch = f"origin/{branch}"
+    remote_exists = run_git_command(['rev-parse', '--verify', remote_branch])
+    
+    if not remote_exists:
+        print(f"⚠️ リモートブランチ '{remote_branch}' が見つかりません。まだ一度もpushされていない可能性があります。")
+        return
+
+    # 5. リモートに対して未プッシュのコミットがあるか確認
+    unpushed_commits = run_git_command(['log', f'{remote_branch}..HEAD', '--', filename])
+    
+    if unpushed_commits:
+        print(f"⚠️ '{filename}' はローカルでコミットされていますが、まだGitHub（リモート）にpushされていません。")
+    else:
+        tracked = run_git_command(['ls-files', filename])
+        if tracked:
+            print(f"✅ '{filename}' はGitHub（リモート）にpush済みです！")
+        else:
+            print(f"❌ '{filename}' はGitに追跡されていません。")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("使い方: python3 check_push.py <ファイル名>")
+        sys.exit(1)
+    
+    target_file = sys.argv[1]
+    check_file_status(target_file)
 
