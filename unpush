@@ -46,3 +46,11 @@ def check_file_status(filename):
             print(f"'{filename}' はGitHubにpush済みです！")
         else:
             print(f"'{filename}' はGitに追跡されていません。")
+
+　　if __name__ == '__main__':
+    　　import sys
+    if len(sys.argv) > 1:
+        check_file_status(sys.argv[1])
+    else:
+        print("エラー: 引数にファイル名を指定してください。")
+
