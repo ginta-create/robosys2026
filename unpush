@@ -22,32 +22,32 @@ def run_git_command(args):
 def check_file_status(filename):
 
     if not os.path.exists(filename) and not run_git_command(['ls-files', filename]):
-        print(f" エラー: ファイル '{filename}' が存在しないか、Gitで管理されていません。")
+        print(f"エラ- : ファイル '{filename}' が存在しないか、Gitで管理されていません。")
         return
 
-    status_output = run_git_command(['status', '--porcelain', filename])
+    status_output = run_git_command(["status", "--porcelain", filename])
     if status_output:
         print(f"{filename}' はまだコミットされていません。")
         return
 
-    branch = run_git_command(['rev-parse', '--abbrev-ref', 'HEAD'])
+    branch = run_git_command(["rev-parse", "--abbrev-ref", "HEAD"])
     if not branch:
         print("エラー: 現在のGitブランチを取得できません。")
         return
 
     remote_branch = f"origin/{branch}"
-    remote_exists = run_git_command(['rev-parse', '--verify', remote_branch])
+    remote_exists = run_git_command(["rev-parse", "--verify", remote_branch])
 
     if not remote_exists:
         print(f"リモートブランチ '{remote_branch}' が見つかりません。")
         return
 
-    unpushed_commits = run_git_command(['log', f'{remote_branch}..HEAD', '--', filename])
+    unpushed_commits = run_git_command(["log", f"{remote_branch}..HEAD", "--", filename])
 
     if unpushed_commits:
-        print(f"{filename}' はローカルでコミットされていますが、まだGitHubにpushされていません。")
+        print(f"{filename}' はコミットされていますが、まだGitHubにpushされていません。")
     else:
-        tracked = run_git_command(['ls-files', filename])
+        tracked = run_git_command(["ls-files", filename])
         if tracked:
             print(f"'{filename}' はGitHubにpush済みです！")
         else:
