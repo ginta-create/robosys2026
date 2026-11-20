@@ -3,8 +3,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import subprocess
-import sys
-import os
 
 def run_git_command(args):
     try:
@@ -13,33 +11,29 @@ def run_git_command(args):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
+            encoding='utf-8',
             check=True
         )
         return result.stdout.strip()
     except subprocess.CalledProcessError:
-        return None
+        return ""
 
 def check_file_status(filename):
-
-    if not os.path.exists(filename) and not run_git_command(['ls-files', filename]):
-        print(f"エラ- : ファイル '{filename}' が存在しないか、Gitで管理されていません。")
-        return
-
     status_output = run_git_command(['status', '--porcelain', filename])
     if status_output:
-        print(f"'{filename}' はまだコミットされていません。")
+        print(f"'{filename}' はまだコミットされていません（変更がステージングまたは未ステージングです）。")
         return
 
     branch = run_git_command(['rev-parse', '--abbrev-ref', 'HEAD'])
     if not branch:
-        print("エラー: 現在のGitブランチを取得できません。")
+        print("エラー: 現在のGitブランチを取得できません（デタッチHEADの可能性もあります）。")
         return
 
     remote_branch = f"origin/{branch}"
-    remote_exists = run_git_command(['rev-parse', '--verify', remote_branch])
 
+    remote_exists = run_git_command(['rev-parse', '--verify', remote_branch])
     if not remote_exists:
-        print(f"リモートブランチ '{remote_branch}' が見つかりません。")
+        print(f"リモートブランチ '{remote_branch}' が見つかりません。(ローカルに情報がない場合は 'git fetch' を試してください)")
         return
 
     unpushed_commits = run_git_command(['log', f'{remote_branch}..HEAD', '--', filename])
