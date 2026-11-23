@@ -30,20 +30,20 @@ def check_file_status(filename):
 
     branch = run_git_command(['rev-parse', '--abbrev-ref', 'HEAD'])
     if not branch:
-        print("エラー: 現在のGitブランチを取得できません（デタッチHEADの可能性もあります）。")
+        print("エラー: 現在のGitブランチを取得できません。")
         return
 
     remote_branch = f"origin/{branch}"
 
     remote_exists = run_git_command(['rev-parse', '--verify', remote_branch])
     if not remote_exists:
-        print(f"リモートブランチ '{remote_branch}' が見つかりません。(ローカルに情報がない場合は 'git fetch' を試してください)")
+        print(f"リモートブランチ '{remote_branch}' が見つかりません。")
         return
 
     unpushed_commits = run_git_command(['log', f'{remote_branch}..HEAD', '--', filename])
 
     if unpushed_commits:
-        print(f"'{filename}' はローカルでコミットされていますが、まだGitHubにpushされていません。")
+        print(f"'{filename}' はコミットされていますが、まだGitHubにpushされていません。")
     else:
         tracked = run_git_command(['ls-files', filename])
         if tracked:
