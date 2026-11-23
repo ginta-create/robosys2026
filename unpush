@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import subprocess
-import os
+import sys
 
 def run_git_command(args):
     try:
@@ -18,11 +18,14 @@ def run_git_command(args):
         return result.stdout.strip()
     except subprocess.CalledProcessError:
         return ""
+    except FileNotFoundError:
+        print("エラー: gitコマンドが見つかりません。")
+        return ""
 
 def check_file_status(filename):
     status_output = run_git_command(['status', '--porcelain', filename])
     if status_output:
-        print(f"'{filename}' はまだコミットされていません（変更がステージングまたは未ステージングです）。")
+        print(f"'{filename}' はまだコミットされていません。")
         return
 
     branch = run_git_command(['rev-parse', '--abbrev-ref', 'HEAD'])
@@ -48,9 +51,8 @@ def check_file_status(filename):
         else:
             print(f"'{filename}' はGitに追跡されていません。")
 
-    if __name__ == '__main__':
+if __name__ == '__main__':
     if len(sys.argv) > 1:
         check_file_status(sys.argv[1])
     else:
         print("エラー: 引数にファイル名を指定してください。")
-
