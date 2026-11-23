@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import subprocess
+import os
 
 def run_git_command(args):
     try:
@@ -47,8 +48,7 @@ def check_file_status(filename):
         else:
             print(f"'{filename}' はGitに追跡されていません。")
 
-　　if __name__ == '__main__':
-    　　import sys
+    if __name__ == '__main__':
     if len(sys.argv) > 1:
         check_file_status(sys.argv[1])
     else:
