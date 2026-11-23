@@ -1,7 +1,5 @@
-# plusコマンド
-![test](https://github.com/<ユーザ名>/robosys2026/actions/workflows/test.yml/badge.svg)
-↑ テスト結果を反映したバッジの画像が埋め込まれる（<ユーザ名>は各自変更を）
-
+# unpushコマンド
+[![test](https://github.com/ginta-create/robosys2026/actions/workflows/test.yml/badge.svg)](https://github.com/ginta-create/robosys2026/actions/workflows/test.yml)
 標準入力から読み込んだ数字を足す。
 
 （ここに前ページの項目をいろいろ書く）
