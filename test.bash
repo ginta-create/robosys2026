@@ -1,5 +1,5 @@
 #!/bin/bash
-# SPDX-FileCopyrightText: 2026 UchiyamaGinta
+# SPDX-FileCopyrightText: 2026 Ginta Uchiyama
 # SPDX-License-Identifier: BSD-3-Clause
 
 output=$(python3 unpush)
