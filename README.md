@@ -1,13 +1,13 @@
 # unpushコマンド
 [![test](https://github.com/ginta-create/robosys2026/actions/workflows/test.yml/badge.svg)](https://github.com/ginta-create/robosys2026/actions/workflows/test.yml)
 
-##プログラムについて
+## プログラムについて
 指定したファイルが現在のリポジトリにおいて、以下のどの状態にあるかを自動で判定してくれるコマンド。
 - まだコミットされていない。
 - コミット済みだがまだGitHubにプッシュされていない。
 - すでにGitHubにプッシュ済みである。
 
-##クローン方法について
+## クローン方法について
 - 
 ## 必要なソフトウェア
 - Python
