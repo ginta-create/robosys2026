@@ -7,10 +7,24 @@
 - コミット済みだがまだGitHubにプッシュされていない。
 - すでにGitHubにプッシュ済みである。
 
-## クローン方法について
+## 使用準備
+- リポジトリをクローン
 ```bash
 git clone https://github.com/ginta-create/robosys2026.git
 ```
+- ディレクトリをrobosys2026に移動
+```bash
+cd robosys2026
+```
+- 実行権限をつける
+```bash
+chmod +x unpush
+```
+
+## 使用方法
+
+
+
  
 ## 必要なソフトウェア
 - Python
