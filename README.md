@@ -8,6 +8,7 @@
 - すでにGitHubにプッシュ済みである。
 
 ## クローン方法について
+'''bash
 git clone https://github.com/ginta-create/robosys2026.git 
 ## 必要なソフトウェア
 - Python
