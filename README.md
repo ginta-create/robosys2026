@@ -24,7 +24,8 @@ chmod +x unpush
 ## 使用方法
 - 例　plusというファイルを確認したいとき
 ```bash
-./unpush plus
+$./unpush plus
+GitHubにPUSH済みです。
 ```
  
 ## 必要なソフトウェア
