@@ -7,8 +7,8 @@
 - コミット済みだがまだGitHubにプッシュされていない。
 - すでにGitHubにプッシュ済みである。
 
-## クローン方法について
 '''bash
+## クローン方法について
 git clone https://github.com/ginta-create/robosys2026.git 
 ## 必要なソフトウェア
 - Python
