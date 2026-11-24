@@ -25,7 +25,7 @@ chmod +x unpush
 - 例　plusというファイルを確認したいとき
 ```bash
 $./unpush plus
-GitHubにPUSH済みです。
+GitHubにpush済みです。
 ```
  
 ## 必要なソフトウェア
